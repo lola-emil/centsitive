@@ -1,0 +1,8 @@
+.overlay {
+    @apply bg-neutral-900/50 h-screen w-full fixed top-0 left-0
+    z-40
+}
+
+.nav-link {
+    @apply p-3 rounded flex gap-4 hover:bg-neutral-700 items-center;
+}

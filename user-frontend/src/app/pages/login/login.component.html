@@ -1,0 +1,50 @@
+<div class="container">
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h3 class="text-center text-2xl">SIGN IN</h3>
+    <br>
+    <br>
+
+    <!-- ERror alert -->
+    @if(alertVisible) {
+        <div class="p-5 bg-red-500 rounded">
+            {{error}}
+        </div>
+    } @else {
+        <div class="p-5">
+            <p class="invisible">aso</p>
+        </div>
+    }
+    
+    <br>
+    <form action="" [formGroup]="loginForm" (submit)="onSubmit()">
+        <div class="form-input">
+            <div class="icon">
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M17.754 14a2.249 2.249 0 0 1 2.25 2.249v.918a2.75 2.75 0 0 1-.513 1.599C17.945 20.929 15.42 22 12 22c-3.422 0-5.945-1.072-7.487-3.237a2.75 2.75 0 0 1-.51-1.595v-.92a2.249 2.249 0 0 1 2.249-2.25h11.501ZM12 2.004a5 5 0 1 1 0 10 5 5 0 0 1 0-10Z"
+                        class="fill-neutral-500" />
+                </svg>
+            </div>
+            <input type="text" formControlName="email" class="bg-transparent w-full" placeholder="Username">
+        </div>
+        <br>
+        <div class="form-input">
+            <div class="icon">
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M12 2a4 4 0 0 1 4 4v2h2.5A1.5 1.5 0 0 1 20 9.5v11a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 20.5v-11A1.5 1.5 0 0 1 5.5 8H8V6a4 4 0 0 1 4-4Zm0 11.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3ZM12 4a2 2 0 0 0-2 2v2h4V6a2 2 0 0 0-2-2Z"
+                        class="fill-neutral-500" />
+                </svg>
+            </div>
+            <input type="password" formControlName="password" class="bg-transparent w-full" placeholder="Password">
+        </div>
+
+        <br>
+        <br>
+        <input type="submit" value="SIGN IN" class="form-btn">
+    </form>
+</div>

@@ -1,0 +1,17 @@
+.form-input {
+    @apply border-b border-neutral-600  flex items-center
+    gap-1
+}
+
+.form-input > input {
+    @apply outline-none h-full flex-1 px-3 py-5 text-lg
+}
+
+/* .form-input:has(> input:focus) {
+    @apply border-neutral-300
+} */
+
+
+.form-btn {
+    @apply p-4 bg-blue-500 w-full rounded hover:scale-105 transition-transform cursor-pointer
+}

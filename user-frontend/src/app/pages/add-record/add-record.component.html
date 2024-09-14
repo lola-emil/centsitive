@@ -1,0 +1,31 @@
+<app-navbar pageTitle="Add Record" [canPop]="true"></app-navbar>
+
+<div class="container mt-16">
+    <br>
+
+    <!-- Error display -->
+    @if (error) {
+    <div class="p-5 rounded bg-rose-500">
+        {{error}}
+    </div>
+    }
+    @else {
+    <div class="p-5">
+        <p class="invisible">error</p>
+    </div>
+    }
+    
+    <br>
+    <form action="" [formGroup]="recordForm" (submit)="onSubmit()">
+        <select formControlName="category" class="form-input">
+            <option class="text-neutral-900" value="" default selected>Select Category</option>
+            <option class="text-neutral-900" value="Bill">Bill</option>
+            <option class="text-neutral-900" value="Food">Food</option>
+            <option class="text-neutral-900" value="Utility">Utility</option>
+        </select>
+        <textarea placeholder="Add note" formControlName="note" class="form-input" rows="5"></textarea>
+        <input type="number" formControlName="amount" placeholder="Amount" class="form-input">
+
+        <input type="submit" value="Submit" class="form-btn">
+    </form>
+</div>

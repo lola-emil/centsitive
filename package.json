@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "admin:create": "cd api && node ./scripts/addAdmin.js",
+    "build": "npm install yarn -g && yarn install && concurrently \"cd user-frontend && yarn install\" \"cd admin && yarn install\" \"cd api && yarn install\"",
+    "start": "concurrently \"cd user-frontend && yarn run start\" \"cd admin && yarn run dev\" \"cd api && yarn run dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

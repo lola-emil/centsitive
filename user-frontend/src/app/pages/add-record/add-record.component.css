@@ -1,0 +1,20 @@
+.form-input {
+    @apply p-4 w-full bg-transparent border border-neutral-700 rounded
+    mb-4
+}
+
+.form-btn {
+    @apply p-4 bg-blue-500 rounded w-full
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

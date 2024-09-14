@@ -1,0 +1,39 @@
+{
+  "name": "expense-tracker-admin",
+  "version": "2.0.0",
+  "main": "build/index.js",
+  "private": true,
+  "repository": "https://github.com/lola-emil/expense-tracker-admin.git",
+  "author": "Rens Saladaga <staleexam19@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "concurrently \"tsc -p . -w\" \"node --watch-path=build .\" \"yarn run css:dev\"",
+    "build": "tsc -p .",
+    "css:dev": "tailwindcss -i ./static/css/input.css -o ./static/css/styles.css -w"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-flash": "^0.1.1",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-flash-message": "^3.0.2",
+    "express-session": "^1.18.0",
+    "joi": "^17.13.1",
+    "knex": "^3.1.0",
+    "mysql": "^2.18.1",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.13",
+    "@types/bcrypt": "^5.0.2",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/connect-flash": "^0.0.40",
+    "@types/express": "^4.17.21",
+    "@types/express-session": "^1.18.0",
+    "@types/uuid": "^9.0.8",
+    "concurrently": "^8.2.2",
+    "daisyui": "^4.11.1",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.4.5"
+  }
+}
