@@ -1,12 +1,12 @@
 import 'dart:ui';
 
-import 'package:expense_tracker/features/tracker/model/expense_model.dart';
-import 'package:expense_tracker/features/tracker/presentation/widgets/drawer_menu.dart';
-import 'package:expense_tracker/features/tracker/presentation/widgets/transaction_list_item.dart';
+import 'package:expense_tracker/models/expense_model.dart';
+import 'package:expense_tracker/components/drawer_menu.dart';
+import 'package:expense_tracker/components/transaction_list_item.dart';
 import 'package:expense_tracker/shared/color/custom_color_scheme.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/features/tracker/repository/expense_repository.dart'
+import 'package:expense_tracker/repository/expense_repository.dart'
     as expense_repository;
 
 class RecordsPage extends StatefulWidget {

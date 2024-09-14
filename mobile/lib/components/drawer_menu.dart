@@ -2,7 +2,7 @@ import 'package:expense_tracker/shared/color/custom_color_scheme.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:expense_tracker/features/auth/repository/user_repository.dart' as auth_repository;
+import 'package:expense_tracker/repository/user_repository.dart' as auth_repository;
 import "package:flutter_secure_storage/flutter_secure_storage.dart";
 
 class DrawerMenu extends StatefulWidget {

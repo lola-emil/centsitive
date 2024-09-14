@@ -2,7 +2,7 @@ import 'package:expense_tracker/shared/color/custom_color_scheme.dart';
 import 'package:expense_tracker/shared/widgets/custom_button.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/features/tracker/repository/expense_repository.dart'
+import 'package:expense_tracker/repository/expense_repository.dart'
     as expense_repository;
 
 class AddRecordPage extends StatefulWidget {

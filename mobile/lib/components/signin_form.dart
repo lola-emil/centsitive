@@ -1,8 +1,8 @@
 import 'package:expense_tracker/shared/widgets/custom_button.dart';
-import 'package:expense_tracker/features/auth/presentation/widgets/form_input.dart';
+import 'package:expense_tracker/components/form_input.dart';
 import 'package:flutter/material.dart';
 
-import 'package:expense_tracker/features/auth/repository/user_repository.dart'
+import 'package:expense_tracker/repository/user_repository.dart'
     as auth_repository;
 import 'package:go_router/go_router.dart';
 

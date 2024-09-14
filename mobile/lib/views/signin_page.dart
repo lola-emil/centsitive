@@ -1,4 +1,4 @@
-import 'package:expense_tracker/features/auth/presentation/widgets/signin_form.dart';
+import 'package:expense_tracker/components/signin_form.dart';
 import 'package:flutter/material.dart';
 
 class SignInPage extends StatelessWidget {

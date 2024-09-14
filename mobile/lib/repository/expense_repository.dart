@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:expense_tracker/features/tracker/model/expense_model.dart';
-import 'package:expense_tracker/features/tracker/model/overview_model.dart';
+import 'package:expense_tracker/models/expense_model.dart';
+import 'package:expense_tracker/models/overview_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 const FlutterSecureStorage secureStorage = FlutterSecureStorage();

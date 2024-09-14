@@ -1,7 +1,7 @@
-import 'package:expense_tracker/features/auth/presentation/pages/signin_page.dart';
-import 'package:expense_tracker/features/tracker/presentation/pages/overview_page.dart';
-import 'package:expense_tracker/features/tracker/presentation/pages/records_page.dart';
-import 'package:expense_tracker/features/tracker/presentation/pages/update_profile_page.dart';
+import 'package:expense_tracker/views/signin_page.dart';
+import 'package:expense_tracker/views/overview_page.dart';
+import 'package:expense_tracker/views/records_page.dart';
+import 'package:expense_tracker/views/update_profile_page.dart';
 import 'package:expense_tracker/shared/color/custom_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
