@@ -23,10 +23,13 @@ export async function addRecord(req: Request, res: Response) {
 export async function getRecords(req: Request, res: Response) {
     const apiResponse = new ApiResponse();
     const userId = res.locals.userId; 
+    const date = req.query.date as string;
+
+    console.log("date sa controller:", date == "");
 
     // if (!userId) throw new ErrorResponse(404, "'userId' query required");
 
-    const expenses = await recordRepo.selectAll(userId);
+    const expenses = await recordRepo.selectAll(userId, date);
 
     apiResponse.status = 200;
     apiResponse.data = expenses;

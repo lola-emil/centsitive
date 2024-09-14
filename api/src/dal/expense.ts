@@ -1,4 +1,3 @@
-    import { v4 as uuidv4 } from "uuid";
 import { db } from "../config/db";
 
 const TBL_NAME = "tbl_records";
@@ -24,14 +23,17 @@ export async function insert(expense: Expense) {
 }
 
 // Get all records/transactions by user_id
-export async function selectAll(userId: number) {
+export async function selectAll(userId: number, date?: string) {
+    
+    if (!date || date == "") date = new Date().toISOString();
+
     try {
         const result = await db<Expense>(TBL_NAME)
             .select()
             .where("user_id", userId)
             .andWhere("delete_time", null)
-            .andWhereRaw("MONTH(created_at) = MONTH(NOW())")
-            .andWhereRaw("YEAR(created_at) = YEAR(NOW())")
+            .andWhereRaw("MONTH(created_at) = MONTH(?)", [date])
+            .andWhereRaw("YEAR(created_at) = YEAR(?)", [date])
             .orderBy('created_at', 'desc');
 
         return result;
@@ -53,7 +55,10 @@ export async function updateById(id: number, data: Expense) {
 }
 
 // Get overview of records/transactions
-export async function getOverview(userId: number) {
+export async function getOverview(userId: number, date?: string) {
+
+    if (!date || date == "") date = new Date().toISOString();
+
     try {
         let rows = await db<Expense>(TBL_NAME)
             .column("category")
@@ -61,8 +66,8 @@ export async function getOverview(userId: number) {
             .groupBy("category")
             .where("user_id", userId)
             .andWhere("delete_time", null)
-            .andWhereRaw("MONTH(created_at) = MONTH(NOW())")
-            .andWhereRaw("YEAR(created_at) = YEAR(NOW())")
+            .andWhereRaw("MONTH(created_at) = MONTH(?)", [date])
+            .andWhereRaw("YEAR(created_at) = YEAR(?)", [date])
             .orderBy('created_at', 'desc');
 
         let totalSum = rows.reduce((sum, row) =>
@@ -81,14 +86,17 @@ export async function getOverview(userId: number) {
 }
 
 // Get the 5 latest added records/transactions from database
-export async function getRecentRecords(userId: number) {
+export async function getRecentRecords(userId: number, date?: string) {
+
+    if (!date || date == "") date = new Date().toISOString();
+
     try {
         let rows = await db<Expense>(TBL_NAME)
             .select()
             .where("user_id", userId)
             .andWhere("delete_time", null)
-            .andWhereRaw("MONTH(created_at) = MONTH(NOW())")
-            .andWhereRaw("YEAR(created_at) = YEAR(NOW())")
+            .andWhereRaw("MONTH(created_at) = MONTH(?)", [date])
+            .andWhereRaw("YEAR(created_at) = YEAR(?)", [date])
             .orderBy("created_at", "desc").limit(5);
 
         return rows;
@@ -97,15 +105,18 @@ export async function getRecentRecords(userId: number) {
     }
 }
 
-export async function getTotalExpenseById(userId: number) {
+export async function getTotalExpenseById(userId: number, date?: string) {
+    
+    if (!date || date == "") date = new Date().toISOString();
+
     try {
         const result = await db<Expense>(TBL_NAME)
             .column("amount")
             .sum({ total_expense: "amount" })
             .where("user_id", userId)
             .andWhere("delete_time", null)
-            .andWhereRaw("MONTH(created_at) = MONTH(NOW())")
-            .andWhereRaw("YEAR(created_at) = YEAR(NOW())");
+            .andWhereRaw("MONTH(created_at) = MONTH(?)", [date])
+            .andWhereRaw("YEAR(created_at) = YEAR(?)", [date]);
 
         return result;
     } catch (error) {
