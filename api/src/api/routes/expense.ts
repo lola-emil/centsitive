@@ -35,7 +35,7 @@ router.get("/current-month-year", (req, res) => {
 });
 
 router.get("/format-month-year", (req, res) => {
-    const date = req.query.date || req.query.date != "null" ? new Date(req.query.date as string) : new Date();
+    const date = req.query.date ? new Date(req.query.date as string) : new Date();
 
 
     const monthNames = [
