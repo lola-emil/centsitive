@@ -58,7 +58,6 @@ export async function findAll() {
 
         return result;
     } catch (error) {
-        console.log(error);
         throw new Error((<any>error).code);
     }
 }

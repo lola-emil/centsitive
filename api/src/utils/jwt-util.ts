@@ -17,7 +17,6 @@ export function verifyToken(token: string, secretKey: jwt.Secret) {
     return new Promise((resolve, reject) => {
         jwt.verify(token, secretKey, {}, (err, decoded) => {
             if (err) reject(err);
-            console.log(decoded);
             resolve(decoded);
         });
     });

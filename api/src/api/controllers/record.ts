@@ -34,7 +34,6 @@ export async function addRecord(req: Request, res: Response) {
 
     const result = await RecordRepo.insert(req.body);
     
-    console.log(result);
     apiResponse.status = 200;
     apiResponse.message = "Record inserted successfully";
     apiResponse.data = result;

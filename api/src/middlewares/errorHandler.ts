@@ -12,8 +12,6 @@ export default function errorHandler(error: Error, req: Request, res: Response, 
     } else {
         apiResponse.status = 500;
         apiResponse.message = "Internal Server Error: " + error.message;
-
-        console.log(error)
     }
 
     return handleResponse(apiResponse, res);

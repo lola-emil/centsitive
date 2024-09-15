@@ -25,7 +25,6 @@ export async function getRecords(req: Request, res: Response) {
     const userId = res.locals.userId; 
     const date = req.query.date as string;
 
-    console.log("date sa controller:", date == "");
 
     // if (!userId) throw new ErrorResponse(404, "'userId' query required");
 
