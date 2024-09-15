@@ -64,11 +64,17 @@ export async function deleteRecord(req: Request, res: Response) {
 
 export async function getOverview(req: Request, res: Response) {
     const userId = res.locals.userId;
+    const date = req.query.date as string;
+
+    console.log("getOverview function: ", {
+        userId,
+        date
+    })
 
     if (!userId) throw new ErrorResponse(404, "'userId' query required");
 
     const apiResponse = new ApiResponse();
-    const data = await recordRepo.getOverview(userId);
+    const data = await recordRepo.getOverview(userId, date);
 
     apiResponse.data = data;
     apiResponse.status = 200;
@@ -78,11 +84,12 @@ export async function getOverview(req: Request, res: Response) {
 
 export async function getRecent(req: Request, res: Response) {
     const userId = res.locals.userId;
+    const date = req.query.date as string;
 
     if (!userId) throw new ErrorResponse(404, "'userId' query required");
 
     const apiResponse = new ApiResponse();
-    const data = await recordRepo.getRecentRecords(userId);
+    const data = await recordRepo.getRecentRecords(userId, date);
 
     apiResponse.data = data;
     apiResponse.status = 200;

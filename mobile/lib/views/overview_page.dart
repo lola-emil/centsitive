@@ -43,9 +43,9 @@ class _OverviewPageState extends State<OverviewPage> {
     });
 
     try {
-      final overviewValue = await expense_repository.getOverview();
+      final overviewValue = await expense_repository.getOverview(null);
       final recentTransactionsValue =
-          await expense_repository.getRecentTransactions();
+          await expense_repository.getRecentTransactions(null);
       final monthAndYear = await expense_repository.getCurrentMonthAndYear();
 
       if (overviewValue.isEmpty && recentTransactionsValue.isEmpty) {
@@ -70,6 +70,54 @@ class _OverviewPageState extends State<OverviewPage> {
       setState(() {
         isLoading = false;
       });
+    }
+  }
+
+  Future<void> getPreviousData(DateTime? date) async {
+    setState(() {
+      isLoading = true;
+      isError = false;
+      noRecords = false;
+    });
+
+    try {
+      final monthAndYear =
+          await expense_repository.getFormattedMonthAndYear(date);
+      final overview = await expense_repository.getOverview(date);
+      final recents = await expense_repository.getRecentTransactions(date);
+
+      if (overview.isEmpty && recents.isEmpty) {
+        setState(() {
+          noRecords = true;
+        });
+      }
+
+      setState(() {
+        currentMonthAndYear = monthAndYear;
+        overviewList = overview;
+        recentTransactions = recents;
+      });
+    } catch (e) {
+      setState(() {
+        isError = true;
+      });
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> showPicker() async {
+    var result = await showMonthYearPicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2019),
+      lastDate: DateTime.now(),
+    );
+
+    if (result != null) {
+      getPreviousData(result);
     }
   }
 
@@ -153,15 +201,30 @@ class _OverviewPageState extends State<OverviewPage> {
         }
 
         if (noRecords) {
-          return SizedBox(
-            height: screenHeight,
-            width: screenWidth,
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [Text("No records yet")],
+          return ListView(children: [
+            const SizedBox(
+              height: 10,
             ),
-          );
+            FractionallySizedBox(
+                widthFactor: .9,
+                child: GestureDetector(
+                  onTap: showPicker,
+                  child: Text(
+                    currentMonthAndYear,
+                    style: const TextStyle(
+                        fontSize: 16 * 1.25, fontWeight: FontWeight.w500),
+                  ),
+                )),
+            SizedBox(
+              height: screenHeight,
+              width: screenWidth,
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [Text("No transaction has been made for this month")],
+              ),
+            ),
+          ]);
         }
 
         return ListView(
@@ -172,16 +235,7 @@ class _OverviewPageState extends State<OverviewPage> {
             FractionallySizedBox(
                 widthFactor: .9,
                 child: GestureDetector(
-                  onTap: () async {
-                    var result = await showMonthYearPicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2019),
-                      lastDate: DateTime.now(),
-                    );
-
-                    print(result);
-                  },
+                  onTap: showPicker,
                   child: Text(
                     currentMonthAndYear,
                     style: const TextStyle(

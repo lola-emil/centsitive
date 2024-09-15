@@ -29,16 +29,22 @@ Future<List<ExpenseModel>> getTransactions() async {
   return list;
 }
 
-Future<List<OverviewModel>> getOverview() async {
+Future<List<OverviewModel>> getOverview(DateTime? date) async {
   String? token = await secureStorage.read(key: "TOKEN");
   String? userId = await secureStorage.read(key: "USER_ID");
+
+  String url = "http://localhost:5000/expense/overview?userId=$userId";
+
+  if (date != null) {
+    url += "&date=$date";
+  }
 
   List<OverviewModel> list = List.of([]);
 
   dio.options.headers["authorization"] = "Bearer $token";
 
   Response response =
-      await dio.get("http://localhost:5000/expense/overview?userId=$userId");
+      await dio.get(url);
 
   dynamic data = response.data["data"];
 
@@ -50,16 +56,23 @@ Future<List<OverviewModel>> getOverview() async {
   return list;
 }
 
-Future<List<ExpenseModel>> getRecentTransactions() async {
+Future<List<ExpenseModel>> getRecentTransactions(DateTime? date) async {
   String? token = await secureStorage.read(key: "TOKEN");
   String? userId = await secureStorage.read(key: "USER_ID");
+
+  String url = "http://localhost:5000/expense/recent?userId=$userId";
+  
+  if (date != null) {
+    url += "&date=$date";
+  }
+
 
   List<ExpenseModel> list = List.of([]);
 
   dio.options.headers["authorization"] = "Bearer $token";
 
   Response response =
-      await dio.get("http://localhost:5000/expense/recent?userId=$userId");
+      await dio.get(url);
   dynamic data = response.data["data"];
 
   for (int i = 0; i < data.length; i++) {
@@ -118,6 +131,16 @@ Future<String> getCurrentMonthAndYear() async {
 
   dio.options.headers["authorization"] = "Bearer $token";
   Response response = await dio.get("http://localhost:5000/expense/current-month-year");
+  dynamic data = response.data["data"];
+
+  return data["time"];
+}
+
+Future<String> getFormattedMonthAndYear(DateTime? date) async {
+  String? token = await secureStorage.read(key: "TOKEN");
+
+  dio.options.headers["authorization"] = "Bearer $token";
+  Response response = await dio.get("http://localhost:5000/expense/format-month-year?date=$date");
   dynamic data = response.data["data"];
 
   return data["time"];

@@ -17,10 +17,10 @@ router.get("/search", asyncHandler(ExpenseController.searchTransaction));
 
 router.get("/current-month-year", (req, res) => {
     const currentDate = new Date();
-    const  monthNames = [
+    const monthNames = [
         "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
-      ];
+    ];
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
 
@@ -29,9 +29,36 @@ router.get("/current-month-year", (req, res) => {
     apiResponse.status = 200;
     apiResponse.data = {
         time: `${monthNames[month]} ${year}`
-    }
+    };
 
     return handleResponse(apiResponse, res);
-})
+});
+
+router.get("/format-month-year", (req, res) => {
+    const date = req.query.date || req.query.date != "null" ? new Date(req.query.date as string) : new Date();
+
+
+    const monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    const year = date.getFullYear();
+    const month = date.getMonth();
+
+    console.log({
+        unformattedDate: req.query.date,
+        date, year, month
+    });
+
+    const apiResponse = new ApiResponse();
+
+    apiResponse.status = 200;
+    apiResponse.data = {
+        time: `${monthNames[month]} ${year}`
+    };
+
+    return handleResponse(apiResponse, res);
+});
 
 export default router;
