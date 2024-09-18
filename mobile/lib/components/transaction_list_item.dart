@@ -1,6 +1,7 @@
 import 'package:expense_tracker/shared/color/custom_color_scheme.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TransactionListItem extends StatelessWidget {
   final String category;
@@ -8,6 +9,7 @@ class TransactionListItem extends StatelessWidget {
   final String amount;
   final int itemId;
   final bool deleteButtonVisible;
+  final String createdAt;
   final Function(int)? onDelete;
 
   const TransactionListItem(
@@ -17,6 +19,7 @@ class TransactionListItem extends StatelessWidget {
       required this.amount,
       required this.deleteButtonVisible,
       required this.itemId,
+      required this.createdAt,
       required this.onDelete});
 
   void triggerDelete() {
@@ -24,6 +27,15 @@ class TransactionListItem extends StatelessWidget {
       onDelete!(itemId);
     }
   }
+
+  String formatDate(String date) {
+    DateTime parsedDate = DateTime.parse(date);
+
+    String formattedDate = DateFormat.yMMMMd('en_US').format(parsedDate);
+
+    return formattedDate;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +49,9 @@ class TransactionListItem extends StatelessWidget {
             Text(category),
             Text(
               description,
+              style: const TextStyle(fontSize: 16 * .75),
+            ),
+            Text(formatDate(createdAt),
               style: const TextStyle(fontSize: 16 * .75),
             )
           ],

@@ -294,6 +294,7 @@ class _OverviewPageState extends State<OverviewPage> {
                             deleteButtonVisible: false,
                             category: recentTransactions[index].category,
                             description: recentTransactions[index].note,
+                            createdAt: recentTransactions[index].createdAt,
                             amount:
                                 "- Php ${recentTransactions[index].amount}")),
                   )

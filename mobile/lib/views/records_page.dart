@@ -179,6 +179,7 @@ class _RecordsPageState extends State<RecordsPage> {
                           deleteButtonVisible: true,
                           category: expenseList[index].category,
                           description: expenseList[index].note,
+                          createdAt: expenseList[index].createdAt,
                           amount: "Php ${expenseList[index].amount}"),
                     ),
                   );
