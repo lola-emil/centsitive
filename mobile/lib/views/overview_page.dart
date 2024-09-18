@@ -201,30 +201,36 @@ class _OverviewPageState extends State<OverviewPage> {
         }
 
         if (noRecords) {
-          return ListView(children: [
-            const SizedBox(
-              height: 10,
-            ),
-            FractionallySizedBox(
-                widthFactor: .9,
-                child: GestureDetector(
-                  onTap: showPicker,
-                  child: Text(
-                    currentMonthAndYear,
-                    style: const TextStyle(
-                        fontSize: 16 * 1.25, fontWeight: FontWeight.w500),
-                  ),
-                )),
-            SizedBox(
-              height: screenHeight,
-              width: screenWidth,
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [Text("No transaction has been made for this month")],
+          return RefreshIndicator(
+            onRefresh: () async { 
+              print("Refresh triggered");
+              fetchData();
+             },
+            child: ListView(children: [
+              const SizedBox(
+                height: 10,
               ),
-            ),
-          ]);
+              FractionallySizedBox(
+                  widthFactor: .9,
+                  child: GestureDetector(
+                    onTap: showPicker,
+                    child: Text(
+                      currentMonthAndYear,
+                      style: const TextStyle(
+                          fontSize: 16 * 1.25, fontWeight: FontWeight.w500),
+                    ),
+                  )),
+              SizedBox(
+                height: screenHeight,
+                width: screenWidth,
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [Text("No transaction has been made for this month")],
+                ),
+              ),
+            ]),
+          );
         }
 
         return ListView(
