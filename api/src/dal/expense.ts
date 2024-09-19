@@ -9,6 +9,10 @@ export interface Expense {
     user_id: string;
     created_at: Date;
     delete_time: Date;
+
+    status: "approved" | "rejected" | "pending";
+
+    document: string;
 }
 
 // Insert new record/transaction to database
