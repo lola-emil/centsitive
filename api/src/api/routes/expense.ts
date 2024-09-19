@@ -15,25 +15,6 @@ router.get("/recent", asyncHandler(ExpenseController.getRecent));
 
 router.get("/search", asyncHandler(ExpenseController.searchTransaction));
 
-router.get("/current-month-year", (req, res) => {
-    const currentDate = new Date();
-    const monthNames = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
-
-    const apiResponse = new ApiResponse();
-
-    apiResponse.status = 200;
-    apiResponse.data = {
-        time: `${monthNames[month]} ${year}`
-    };
-
-    return handleResponse(apiResponse, res);
-});
-
 router.get("/format-month-year", (req, res) => {
     const date = req.query.date ? new Date(req.query.date as string) : new Date();
 
