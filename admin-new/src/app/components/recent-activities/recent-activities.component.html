@@ -1,0 +1,84 @@
+<div class="card w-full">
+    <div class="card-body">
+
+        <div class="flex justify-between">
+            <p class="flex gap-2">Recent Activities <span class="tooltip" data-tip="Recent transactions made by users">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M12 1.999c5.524 0 10.002 4.478 10.002 10.002 0 5.523-4.478 10.001-10.002 10.001-5.524 0-10.002-4.478-10.002-10.001C1.998 6.477 6.476 1.999 12 1.999Zm0 1.5a8.502 8.502 0 1 0 0 17.003A8.502 8.502 0 0 0 12 3.5Zm-.004 7a.75.75 0 0 1 .744.648l.007.102.003 5.502a.75.75 0 0 1-1.493.102l-.007-.101-.003-5.502a.75.75 0 0 1 .75-.75ZM12 7.003a.999.999 0 1 1 0 1.997.999.999 0 0 1 0-1.997Z"
+                        fill="#ffffff" />
+                </svg>
+            </span></p>
+
+            <div class="flex gap-2">
+                <div class="dropdown">
+                    <div tabindex="0" class="btn">
+                        <svg width="24" height="24" fill="none" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M13.5 16a.75.75 0 0 1 0 1.5h-3a.75.75 0 0 1 0-1.5h3Zm3-5a.75.75 0 0 1 0 1.5h-9a.75.75 0 0 1 0-1.5h9Zm3-5a.75.75 0 0 1 0 1.5h-15a.75.75 0 0 1 0-1.5h15Z"
+                                fill="#ffffff" />
+                        </svg>
+
+                        <span>Filter</span>
+                    </div>
+                    <ul
+                        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                        <li>By Name</li>
+                        <li>By Category</li>
+                        <li>By Date</li>
+                    </ul>
+                </div>
+
+                <div class="dropdown">
+                    <div tabindex="0" class="btn">
+                        <svg width="24" height="24" fill="none" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="m17.25 4-.1.007a.75.75 0 0 0-.65.743v12.692l-3.22-3.218-.084-.072a.75.75 0 0 0-.976 1.134l4.504 4.5.084.072a.75.75 0 0 0 .976-.073l4.497-4.5.072-.084a.75.75 0 0 0-.073-.977l-.084-.072a.75.75 0 0 0-.977.073L18 17.446V4.75l-.006-.102A.75.75 0 0 0 17.251 4Zm-11.036.22L1.72 8.715l-.073.084a.75.75 0 0 0 .073.976l.084.073a.75.75 0 0 0 .976-.073l3.217-3.218v12.698l.008.102a.75.75 0 0 0 .743.648l.101-.007a.75.75 0 0 0 .649-.743L7.497 6.559l3.223 3.217.084.072a.75.75 0 0 0 .975-1.134L7.275 4.22l-.085-.072a.75.75 0 0 0-.976.073Z"
+                                fill="#ffffff" />
+                        </svg>
+
+                        <span>Sort</span>
+                    </div>
+                    <ul
+                        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                        <li>By Name</li>
+                        <li>By Category</li>
+                        <li>By Date</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Table -->
+        <table class="w-full table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>John Doe</td>
+                    <td>Bill</td>
+                    <td>September 18, 2024</td>
+                    <td>Php 10,654.52</td>
+                    <td>
+                        <div class="badge badge-outline">Pending</div>
+                    </td>
+                    <td>
+                        <a href="" class="link link-primary">View Details</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
