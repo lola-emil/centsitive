@@ -46,9 +46,10 @@ class _OverviewPageState extends State<OverviewPage> {
       final overviewValue = await expense_repository.getOverview(null);
       final recentTransactionsValue =
           await expense_repository.getRecentTransactions(null);
-      final monthAndYear = await expense_repository.getCurrentMonthAndYear();
+      final monthAndYear =
+          await expense_repository.getFormattedMonthAndYear(null);
 
-      if (overviewValue.isEmpty && recentTransactionsValue.isEmpty) {
+      if (overviewValue.isEmpty && recentTransactionsValue.isEmpty && mounted) {
         setState(() {
           noRecords = true;
         });
@@ -60,6 +61,7 @@ class _OverviewPageState extends State<OverviewPage> {
         currentMonthAndYear = monthAndYear;
       });
     } catch (error) {
+      print(error);
       setState(
         () {
           isError = true;
@@ -86,7 +88,7 @@ class _OverviewPageState extends State<OverviewPage> {
       final overview = await expense_repository.getOverview(date);
       final recents = await expense_repository.getRecentTransactions(date);
 
-      if (overview.isEmpty && recents.isEmpty) {
+      if (overview.isEmpty && recents.isEmpty && mounted) {
         setState(() {
           noRecords = true;
         });
@@ -97,7 +99,8 @@ class _OverviewPageState extends State<OverviewPage> {
         overviewList = overview;
         recentTransactions = recents;
       });
-    } catch (e) {
+    } catch (error) {
+      print(error);
       setState(() {
         isError = true;
       });
@@ -125,6 +128,18 @@ class _OverviewPageState extends State<OverviewPage> {
   void initState() {
     fetchData();
     super.initState();
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -181,8 +196,19 @@ class _OverviewPageState extends State<OverviewPage> {
       ),
       body: Builder(builder: (context) {
         if (isLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return RefreshIndicator(
+            onRefresh: () async {
+              fetchData();
+            },
+            child: SingleChildScrollView(
+              
+              child: SizedBox(
+                height: screenHeight,
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            ),
           );
         }
 
@@ -202,11 +228,14 @@ class _OverviewPageState extends State<OverviewPage> {
 
         if (noRecords) {
           return RefreshIndicator(
-            onRefresh: () async { 
+
+            onRefresh: () async {
               print("Refresh triggered");
               fetchData();
-             },
-            child: ListView(children: [
+            },
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
               const SizedBox(
                 height: 10,
               ),
@@ -214,10 +243,18 @@ class _OverviewPageState extends State<OverviewPage> {
                   widthFactor: .9,
                   child: GestureDetector(
                     onTap: showPicker,
-                    child: Text(
-                      currentMonthAndYear,
-                      style: const TextStyle(
-                          fontSize: 16 * 1.25, fontWeight: FontWeight.w500),
+                    child: Row(
+                      children: [
+                        Text(
+                          currentMonthAndYear,
+                          style: const TextStyle(
+                              fontSize: 16 * 1.25, fontWeight: FontWeight.w500),
+                        ),
+                        const Icon(
+                          FluentIcons.chevron_right_12_regular,
+                          color: Colors.white,
+                        )
+                      ],
                     ),
                   )),
               SizedBox(
@@ -226,93 +263,108 @@ class _OverviewPageState extends State<OverviewPage> {
                 child: const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [Text("No transaction has been made for this month")],
+                  children: [
+                    Text("No transaction has been made for this month")
+                  ],
                 ),
               ),
-            ]),
+            ],
+            ),
           );
         }
 
-        return ListView(
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            FractionallySizedBox(
+        return RefreshIndicator(
+          onRefresh: () async {
+            fetchData();
+          },
+          child: ListView(
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              FractionallySizedBox(
+                  widthFactor: .9,
+                  child: GestureDetector(
+                    onTap: showPicker,
+                    child: Row(
+                      children: [
+                        Text(
+                          currentMonthAndYear,
+                          style: const TextStyle(
+                              fontSize: 16 * 1.25, fontWeight: FontWeight.w500),
+                        ),
+                        const Icon(
+                          FluentIcons.chevron_right_12_regular,
+                          color: Colors.white,
+                        )
+                      ],
+                    ),
+                  )),
+              const SizedBox(
+                height: 16,
+              ),
+              DoughnutChart(
+                overviewList: overviewList,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Divider(
+                height: 1,
+                indent: (screenWidth - (screenWidth * .93333)) / 2,
+                endIndent: (screenWidth - (screenWidth * .93333)) / 2,
+                color: CustomColorScheme.mySurface,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              // Categories section
+              FractionallySizedBox(
                 widthFactor: .9,
-                child: GestureDetector(
-                  onTap: showPicker,
-                  child: Text(
-                    currentMonthAndYear,
-                    style: const TextStyle(
-                        fontSize: 16 * 1.25, fontWeight: FontWeight.w500),
-                  ),
-                )),
-            const SizedBox(
-              height: 16,
-            ),
-            DoughnutChart(
-              overviewList: overviewList,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Divider(
-              height: 1,
-              indent: (screenWidth - (screenWidth * .93333)) / 2,
-              endIndent: (screenWidth - (screenWidth * .93333)) / 2,
-              color: CustomColorScheme.mySurface,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            // Categories section
-            FractionallySizedBox(
-              widthFactor: .9,
-              child: Column(
-                children: List.generate(
-                    overviewList.length,
-                    (index) => CategoryItem(
-                          category: overviewList[index].category,
-                          percent: overviewList[index].percentage,
-                          color: chartColors[index],
+                child: Column(
+                  children: List.generate(
+                      overviewList.length,
+                      (index) => CategoryItem(
+                            category: overviewList[index].category,
+                            percent: overviewList[index].percentage,
+                            color: chartColors[index],
+                          )),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              FractionallySizedBox(
+                widthFactor: .9,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Recent Transactions",
+                        style: TextStyle(
+                          fontSize: 16,
                         )),
+                    Column(
+                      children: List.generate(
+                          recentTransactions.length,
+                          (index) => TransactionListItem(
+                              itemId: recentTransactions[index].id,
+                              deleteButtonVisible: false,
+                              category: recentTransactions[index].category,
+                              description: recentTransactions[index].note,
+                              createdAt: recentTransactions[index].createdAt,
+                              amount:
+                                  "Php ${recentTransactions[index].amount}")),
+                    )
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            FractionallySizedBox(
-              widthFactor: .9,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text("Recent Transactions",
-                      style: TextStyle(
-                        fontSize: 16,
-                      )),
-                  Column(
-                    children: List.generate(
-                        recentTransactions.length,
-                        (index) => TransactionListItem(
-                            itemId: recentTransactions[index].id,
-                            onDelete: null,
-                            deleteButtonVisible: false,
-                            category: recentTransactions[index].category,
-                            description: recentTransactions[index].note,
-                            createdAt: recentTransactions[index].createdAt,
-                            amount:
-                                "- Php ${recentTransactions[index].amount}")),
-                  )
-                ],
-              ),
-            ),
-
-            // Scroll padding
-            const SizedBox(
-              height: 16 * 4,
-            )
-          ],
+          
+              // Scroll padding
+              const SizedBox(
+                height: 16 * 4,
+              )
+            ],
+          ),
         );
       }),
     );

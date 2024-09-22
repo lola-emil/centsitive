@@ -26,6 +26,14 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
 
   bool isLoading = false;
 
+
+  @override
+  void setState(VoidCallback fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   void submitChanges() {
     setState(() {
       isLoading = true;

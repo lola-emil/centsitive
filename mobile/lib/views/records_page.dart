@@ -26,50 +26,45 @@ class _RecordsPageState extends State<RecordsPage> {
   List<ExpenseModel> expenseList = List.of([]);
 
   Future<void> fetchData() async {
-    setState(() {
-      isLoading = true;
-      isError = false;
-    });
-
-    try {
-      List<ExpenseModel> list = await expense_repository.getTransactions();
-
       setState(() {
-        expenseList = list;
+        isLoading = true;
+        isError = false;
       });
-    } catch (error) {
+    expense_repository.getTransactions().then((list) {
+        setState(() {
+          expenseList = list;
+          isLoading = false;
+        });
+    }).catchError((error) {
       print(error);
-      setState(() {
-        isError = true;
-      });
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
+
+        setState(() {
+          isError = true;
+          isLoading = false;
+        });
+    });
   }
 
   Future<void> fetchSearchedData(String query) async {
-    setState(() {
-      isLoading = true;
-    });
-
+      setState(() {
+        isLoading = true;
+      });
     try {
       List<ExpenseModel> list =
           await expense_repository.searchTransaction(query);
 
-      setState(() {
-        expenseList = list;
-      });
+        setState(() {
+          expenseList = list;
+        });
     } catch (error) {
       print(error);
-      setState(() {
-        isError = true;
-      });
+        setState(() {
+          isError = true;
+        });
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+        setState(() {
+          isLoading = false;
+        });
     }
   }
 
@@ -80,16 +75,28 @@ class _RecordsPageState extends State<RecordsPage> {
       fetchData();
       _snackbar.showSnackBar(SnackBar(content: Text(message)));
     } catch (error) {
-      setState(() {
-        isError = true;
-      });
+        setState(() {
+          isError = true;
+        });
     }
   }
 
   @override
   void initState() {
-    fetchData();
+      fetchData();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
   }
 
   @override
@@ -150,11 +157,18 @@ class _RecordsPageState extends State<RecordsPage> {
                 widthFactor: .9,
                 child: Builder(builder: (context) {
                   if (isLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        fetchData();
+                      },
+                      child: const SingleChildScrollView(
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
                     );
                   }
-
+      
                   if (isError) {
                     return Center(
                       child: Column(
@@ -167,20 +181,22 @@ class _RecordsPageState extends State<RecordsPage> {
                       ),
                     );
                   }
-
-                  return ListView(
-                    children: List.generate(
-                      expenseList.length,
-                      (index) => TransactionListItem(
-                          onDelete: (id) {
-                            deleteTransaction(id);
-                          },
-                          itemId: expenseList[index].id,
-                          deleteButtonVisible: true,
-                          category: expenseList[index].category,
-                          description: expenseList[index].note,
-                          createdAt: expenseList[index].createdAt,
-                          amount: "Php ${expenseList[index].amount}"),
+      
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      fetchData();
+                    },
+                    child: ListView(
+                      children: List.generate(
+                        expenseList.length,
+                        (index) => TransactionListItem(
+                            itemId: expenseList[index].id,
+                            deleteButtonVisible: true,
+                            category: expenseList[index].category,
+                            description: expenseList[index].note,
+                            createdAt: expenseList[index].createdAt,
+                            amount: "Php ${expenseList[index].amount}"),
+                      ),
                     ),
                   );
                 }),

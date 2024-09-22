@@ -1,10 +1,11 @@
 class ExpenseModel {
-  final int id;
-  final String note;
-  final String category;
-  final double amount;
-  final int userId;
-  final String createdAt;
+  final dynamic id;
+  final dynamic note;
+  final dynamic category;
+  final dynamic amount;
+  final dynamic userId;
+  final dynamic status;
+  final dynamic createdAt;
 
   ExpenseModel(
     this.id,
@@ -12,6 +13,6 @@ class ExpenseModel {
     this.category,
     this.amount,
     this.userId,
-    this.createdAt,
+    this.createdAt, this.status,
   );
 }
