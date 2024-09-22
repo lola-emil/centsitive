@@ -12,6 +12,8 @@ export interface User {
     password: string;
     email: string;
     position: string;
+
+    status: "active" | "inactive"
 }
 
 // Query for new user registration

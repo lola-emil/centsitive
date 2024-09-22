@@ -28,7 +28,7 @@ export async function insert(expense: Expense) {
 
 // Get all records/transactions by user_id
 export async function selectAll(userId: number, date?: string) {
-    
+
     if (!date || date == "") date = new Date().toISOString();
 
     try {
@@ -110,7 +110,7 @@ export async function getRecentRecords(userId: number, date?: string) {
 }
 
 export async function getTotalExpenseById(userId: number, date?: string) {
-    
+
     if (!date || date == "") date = new Date().toISOString();
 
     try {
@@ -129,11 +129,15 @@ export async function getTotalExpenseById(userId: number, date?: string) {
 }
 
 export async function searchByDescriptionOrCategory(userId: number, query: string) {
+    let now = new Date();
+
     try {
         const result = await db<Expense>(TBL_NAME)
             .select()
             .where("user_id", userId)
             .andWhere('delete_time', null)
+            .andWhereRaw("MONTH(created_at) = MONTH(?)", [now])
+            .andWhereRaw("YEAR(created_at) = YEAR(?)", [now])
             .andWhere(function () {
                 this.whereILike("note", `%${query}%`)
                     .orWhereILike("category", `%${query}%`);
@@ -152,4 +156,21 @@ export async function deleteById(id: number) {
     } catch (error) {
         throw new Error((<any>error).code);
     }
+}
+
+export async function getExpenseById(id: number) {
+    const result = await db<Expense>(TBL_NAME).select().where("record_id", id);
+    return result[0];
+}
+
+export async function getTotalExpense(date?: string) {
+    const query = db<Expense>(TBL_NAME).sum("amount as total");
+
+    if (date)
+        query.where("created_at", date);
+
+    const result = await query;
+
+    console.log('result', (result[0] as any).total);
+    return result;
 }

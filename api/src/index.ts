@@ -10,11 +10,14 @@ import { PORT } from "./config/constants";
 const app = express();
 
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 app.use(helmet());
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
+
+
+app.use("/uploads", express.static("uploads"));
 // Add API routes
 app.use(apiRoute);
 

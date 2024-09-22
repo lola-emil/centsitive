@@ -2,14 +2,29 @@ import { Request, Response } from "express";
 import * as recordRepo from "../../dal/expense";
 import { validateExpense } from "../../utils/validation-util";
 import { ApiResponse, ErrorResponse, handleResponse } from "../../utils/response-util";
+import { UploadedFile } from "express-fileupload";
 
 
-export async function addRecord(req: Request, res: Response) {
+export async function addExpense(req: Request, res: Response) {
     const body = req.body;
     const error = validateExpense(body);
     const apiResponse = new ApiResponse();
 
-    if (error) throw new ErrorResponse(400, error);
+    console.log(body);
+
+    // if (error) throw new ErrorResponse(400, error);
+
+
+    if (req.files) {
+        let uploadedFile = req.files.image as UploadedFile;
+
+        const uploadPath = "uploads/" + uploadedFile.name;
+
+        await uploadedFile.mv(uploadPath);
+
+        body.document = "/uploads/" + uploadedFile.name; 
+    }
+
 
     const result = await recordRepo.insert(body);
     if (result == null) throw new ErrorResponse(500, "Insertion error");
@@ -22,7 +37,7 @@ export async function addRecord(req: Request, res: Response) {
 
 export async function getRecords(req: Request, res: Response) {
     const apiResponse = new ApiResponse();
-    const userId = res.locals.userId; 
+    const userId = res.locals.userId;
     const date = req.query.date as string;
 
 
@@ -32,6 +47,19 @@ export async function getRecords(req: Request, res: Response) {
 
     apiResponse.status = 200;
     apiResponse.data = expenses;
+
+    return handleResponse(apiResponse, res);
+}
+
+export async function getRecordById(req: Request, res: Response) {
+    const apiResponse = new ApiResponse();
+
+    const id = parseInt(req.params.recordId);
+
+    const result = await recordRepo.getExpenseById(id);
+
+    apiResponse.status = 200;
+    apiResponse.data = result;
 
     return handleResponse(apiResponse, res);
 }
@@ -65,11 +93,6 @@ export async function deleteRecord(req: Request, res: Response) {
 export async function getOverview(req: Request, res: Response) {
     const userId = res.locals.userId;
     const date = req.query.date as string;
-
-    console.log("getOverview function: ", {
-        userId,
-        date
-    })
 
     if (!userId) throw new ErrorResponse(404, "'userId' query required");
 

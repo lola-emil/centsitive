@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import * as userRepo from "../../dal/user";
-import { validateLogin, validateRegister } from "../../utils/validation-util";
+import * as adminRepo from "../../dal/admin";
+import { validateAdminLogin, validateLogin, validateRegister } from "../../utils/validation-util";
 import { signToken } from "../../utils/jwt-util";
 import { ApiResponse, ErrorResponse, handleResponse } from "../../utils/response-util";
 import { compare } from "bcryptjs";
@@ -27,6 +28,27 @@ export async function login(req: Request, res: Response) {
 
     return handleResponse(apiResponse, res);
 }
+export async function loginAdmin(req: Request, res: Response) {
+    const apiResponse = new ApiResponse();
+
+    const user = req.body;
+    const error = await validateAdminLogin(user);
+
+    if (error) throw new ErrorResponse(400, error);
+
+    const matchedUser = await adminRepo.findByUsername(user.username);
+    const token = await signToken({ user_id: matchedUser?.admin_id }, SECRET_KEY);
+
+    apiResponse.status = 200;
+    apiResponse.message = "Login successful";
+    apiResponse.data = {
+        user_id: matchedUser?.admin_id,
+        name: matchedUser?.firstname + " " + matchedUser?.lastname,
+        token
+    };
+
+    return handleResponse(apiResponse, res);
+}
 
 export async function updatePassword(req: Request, res: Response) {
     const apiResponse = new ApiResponse();
@@ -37,7 +59,7 @@ export async function updatePassword(req: Request, res: Response) {
 
     let { currentPassword, newPassword } = req.body;
     const matchedUser = await userRepo.findById(userId.toString());
-    
+
     if (!matchedUser)
         throw new ErrorResponse(400, "Invalid user Id");
 

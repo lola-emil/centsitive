@@ -14,6 +14,11 @@ const loginSchema = Joi.object({
     password: Joi.string().required()
 });
 
+const adminLoginSchema = Joi.object({
+    username: Joi.string().required(),
+    password: Joi.string().required()
+});
+
 const registerSchema = Joi.object({
     firstname: Joi.string().required(),
     lastname: Joi.string().required(),
@@ -27,7 +32,8 @@ const recordSchema = Joi.object({
     category: Joi.string().max(50).required(),
     note: Joi.string().max(50).required(),
     amount: Joi.number().required(),
-    user_id: Joi.string().required()
+    user_id: Joi.string().required(),
+    image: Joi.allow()
 });
 
 export async function validateLogin(user: User): Promise<string | null> {
@@ -37,6 +43,9 @@ export async function validateLogin(user: User): Promise<string | null> {
 
     const matchedUser = await userRepo.findByEmail(user.email);
     if (!matchedUser) return "Invalid username or password";
+
+    if (matchedUser.status == "inactive")
+        return "Your account has been deactivated."
     
     if (!(await bcrypt.compare(user.password, matchedUser.password)))
         return "Invalid username or password";
@@ -73,15 +82,15 @@ export function validateRecord(record: Record) {
 
 
 export async function validateAdminLogin(admin: Admin) {
-    const { error } = loginSchema.validate(admin);
+    const { error } = adminLoginSchema.validate(admin);
 
     if (error) return error.message;
 
     const matchedUser = await adminRepo.findByUsername(admin.username); 
-    if (!matchedUser) return "Invalid username or password";
+    if (!matchedUser) return "Invalid password";
 
     if (!(await bcrypt.compare(admin.password, matchedUser.password)))
-    return "Invalid username or password";
+    return "Invalid password";
 
     return null;
 }

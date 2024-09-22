@@ -5,6 +5,8 @@ const TBL_NAME = "tbl_admin";
 
 export interface Admin {
     admin_id: string;
+    firstname: string;
+    lastname: string;
     username: string;
     password: string;
 }
