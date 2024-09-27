@@ -13,10 +13,7 @@ export class AuthService {
   ) { }
 
   signin(email: string, password: string) {
-    this.userRepo.signin(email, password)
-    .subscribe((val => {
-      this.storage.set("USER_INFO", JSON.stringify(val));
-    }));
+    return this.userRepo.signin(email, password)
   }
 
   getUserInfo() {

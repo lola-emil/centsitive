@@ -3,7 +3,6 @@ import { OverviewPageComponent } from './views/overview-page/overview-page.compo
 import { SigninPageComponent } from './views/signin-page/signin-page.component';
 import { UsersPageComponent } from './views/users-page/users-page.component';
 import { ExpensesPageComponent } from './views/expenses-page/expenses-page.component';
-import { SettingsPageComponent } from './views/settings-page/settings-page.component';
 import { authGuardGuard } from './guards/auth/auth-guard.guard';
 import { PageNotFoundComponent } from './views/page-not-found/page-not-found.component';
 
@@ -12,24 +11,21 @@ const protectedRoutes: Routes = [
 
     {
         path: "",
-        component: OverviewPageComponent
+        component: OverviewPageComponent,
+        title: "Overview",
     },
 
     {
         path: "users",
         component: UsersPageComponent,
+        title: "Users",
     },
 
     {
         path: "expenses",
-        component: ExpensesPageComponent
+        component: ExpensesPageComponent,
+        title: "Expenses",
     },
-
-    {
-        path: "settings",
-        component: SettingsPageComponent
-    }
-
 ];
 
 
@@ -42,7 +38,8 @@ export const routes: Routes = [
 
     {
         path: "signin",
-        component: SigninPageComponent
+        component: SigninPageComponent,
+        title: "Sign In"
     },
 
     // add ang mga protected routes hehe
@@ -51,6 +48,7 @@ export const routes: Routes = [
 
     {
         path: "**",
-        component: PageNotFoundComponent
+        component: PageNotFoundComponent,
+        title: "Page Not Found"
     }
 ];

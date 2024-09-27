@@ -1,1 +1,85 @@
-<p>users-page works!</p>
+<app-navbar />
+
+<br>
+<h3 class="text-3xl pl-5">User Management</h3>
+<br>
+
+<div class="flex justify-between items-center">
+    <div class="flex-1">
+        <p class="pl-5 text-xl">All users <span class="text-secondary">12</span></p>
+    </div>
+    <div class="flex flex-1 justify-end gap-2">
+        <input type="text" placeholder="Search" class="input input-bordered w-full max-w-xs" (input)="search($event)" />
+        <div class="dropdown">
+            <div tabindex="0" class="btn bg-base-300">
+                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M13.5 16a.75.75 0 0 1 0 1.5h-3a.75.75 0 0 1 0-1.5h3Zm3-5a.75.75 0 0 1 0 1.5h-9a.75.75 0 0 1 0-1.5h9Zm3-5a.75.75 0 0 1 0 1.5h-15a.75.75 0 0 1 0-1.5h15Z"
+                        fill="#ffffff" />
+                </svg>
+
+                <span>Filter</span>
+            </div>
+            <ul class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                <li>By Name</li>
+                <li>By Category</li>
+                <li>By Date</li>
+            </ul>
+        </div>
+
+        <button class="btn btn-primary">
+            <span>
+                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M11.75 3a.75.75 0 0 1 .743.648l.007.102.001 7.25h7.253a.75.75 0 0 1 .102 1.493l-.102.007h-7.253l.002 7.25a.75.75 0 0 1-1.493.101l-.007-.102-.002-7.249H3.752a.75.75 0 0 1-.102-1.493L3.752 11h7.25L11 3.75a.75.75 0 0 1 .75-.75Z"
+                        fill="#ffffff" />
+                </svg>
+            </span>
+            Add user
+        </button>
+    </div>
+</div>
+
+<br>
+
+
+<table class="table table-zebra w-full">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Last active</th>
+            <th>Date added</th>
+            <th>Account status</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @for (user of users; track $index) {
+        <tr>
+            <td>{{user.firstname}} {{ user.lastname }}</td>
+            <td>2024-09-22</td>
+            <td>2023-12-18</td>
+            <td>
+                @if(user.status == "active") {
+                <div class="badge badge-success">{{ user.status }}</div>
+                } @else {
+                <div class="badge badge-error">{{ user.status }}</div>
+                }
+            </td>
+            <td class="flex gap-5">
+                <a class="link link-primary">Edit</a>
+                <a class="link link-error">Deactivate</a>
+            </td>
+        </tr>
+        } @empty {
+        <tr>
+            @if (this.searchQuery != "") {
+            <td colspan="5" align="center">
+                No result for "{{this.searchQuery}}"
+            </td>
+            }
+        </tr>
+        }
+    </tbody>
+</table>

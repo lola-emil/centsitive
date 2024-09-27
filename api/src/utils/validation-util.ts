@@ -24,7 +24,7 @@ const registerSchema = Joi.object({
     lastname: Joi.string().required(),
     username: Joi.string().required(),
     email: Joi.string().email().required(),
-    position: Joi.string().required(),
+    // position: Joi.string().required(),
     password: Joi.string().alphanum().min(8).required()
 });
 
@@ -87,10 +87,10 @@ export async function validateAdminLogin(admin: Admin) {
     if (error) return error.message;
 
     const matchedUser = await adminRepo.findByUsername(admin.username); 
-    if (!matchedUser) return "Invalid password";
+    if (!matchedUser) return "Incorrect username";
 
     if (!(await bcrypt.compare(admin.password, matchedUser.password)))
-    return "Invalid password";
+    return "Incorrect password";
 
     return null;
 }
