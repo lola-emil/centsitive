@@ -1,0 +1,36 @@
+
+<app-navbar/>
+
+
+<div class="flex items-center w-full justify-center h-[calc(100vh-3rem)]">
+    <div class=" w-1/3 p-5">
+        <p class="text-3xl">{{ expense.category }}</p>
+        <!-- <p class="text-3xl">{{expense.firstname}} {{expense.lastname}}</p> -->
+        <br>
+
+        <p class="text-xl">Added by: <span class="font-bold">{{expense.firstname}} {{expense.lastname}}</span></p>
+        <p class="text-xl">
+            description: {{expense.note}}
+        </p>
+
+        <p class="text-xl">Amount: {{ expense.amount | currency:'PHP':'symbol'}}</p>
+        <br>
+        <br>
+
+
+        @if (expense.status == "pending") {
+            <div class="flex w-full gap-5">
+                <button class="btn flex-1 btn-primary" (click)="approve()">Approve</button>
+                <button class="btn flex-1 btn-error" (click)="reject()">Reject</button>
+            </div>
+        } @else if (expense.status == "approved") {
+            <div class="w-full alert alert-success text-xl flex justify-center">
+                Approved
+            </div>
+        } @else {
+            <div class="w-full alert alert-error text-xl flex justify-center">
+                Rejected
+            </div>
+        }
+    </div>
+</div>

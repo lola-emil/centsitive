@@ -1,4 +1,4 @@
-<app-navbar/>
+<app-navbar />
 <br>
 <h3 class="text-3xl pl-5">Expenses</h3>
 <br>
@@ -8,23 +8,22 @@
         <!-- <p class="pl-5 text-xl">All users <span class="text-secondary">12</span></p> -->
     </div>
     <div class="flex flex-1 justify-end gap-2">
-        <input type="text" placeholder="Search" class="input input-bordered w-full max-w-xs" />
-        <div class="dropdown">
-            <div tabindex="0" class="btn bg-base-300">
-                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M13.5 16a.75.75 0 0 1 0 1.5h-3a.75.75 0 0 1 0-1.5h3Zm3-5a.75.75 0 0 1 0 1.5h-9a.75.75 0 0 1 0-1.5h9Zm3-5a.75.75 0 0 1 0 1.5h-15a.75.75 0 0 1 0-1.5h15Z"
-                        fill="#ffffff" />
-                </svg>
-
-                <span>Filter</span>
-            </div>
-            <ul class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                <li>By Name</li>
-                <li>By Category</li>
-                <li>By Date</li>
-            </ul>
+        <div>
+            <input type="text" placeholder="Search" class="input input-bordered w-full max-w-xs" (input)="search($event)" />
         </div>
+
+        <div class="flex gap-5 items-center"> 
+            <select name="" id="" class="select select-bordered" (change)="filter($event)">
+                <option value="">-- Filter by Category --</option>
+                @for (item of categories; track $index) {
+                    <option [value]="item">{{ item }}</option>
+                }
+            </select>
+
+            <!-- <input type="month" class="input input-bordered" (change)="filterDate($event)"> -->
+        </div>
+        <!-- Table -->
+      
 
         <!-- <button class="btn btn-primary">
             <span>
@@ -38,3 +37,50 @@
         </button> -->
     </div>
 </div>
+
+<table class="w-full table table-zebra">
+    <thead>
+        <tr>
+            <th>Added by</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @for(item of expenses; track $index) {
+            
+        <tr>
+            <td>{{ item.firstname }} {{ item.lastname }}</td>
+            <td>{{ item.note }}</td>
+            <td>{{ item.category }}</td>
+            <td>{{ item.created_at | date: 'MM/dd/yyyy, h:mm a' }}</td>
+            <td>{{ item.amount | currency:'PHP':'symbol' }}</td>
+            <td>
+                @if(item.status == "approved") {
+                <div class="badge badge-success badge-outline">{{ item.status }}</div>
+                }
+
+                @else if (item.status == "rejected") {
+                    <div class="badge badge-error badge-outline">{{ item.status }}</div>
+                }
+
+                @else {
+                <div class="badge badge-outline">{{ item.status }}</div>
+                }
+
+            </td>
+
+            <td>
+                <a [routerLink]="['/expense-detail', item.record_id]" class="link link-primary">View detail</a>
+            </td>
+        </tr>
+        } @empty {
+        <p>Wala pay activities</p>
+        }
+    </tbody>
+</table>

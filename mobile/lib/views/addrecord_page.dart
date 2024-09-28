@@ -53,7 +53,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
     }
     expense_repository
         .addTransaction(selectedCategory!, double.parse(amountController.text),
-            noteController.text, file!)
+            noteController.text)
         .then((value) {
       if (mounted) {
         setState(() {
@@ -188,62 +188,62 @@ class _AddRecordPageState extends State<AddRecordPage> {
                   const SizedBox(
                     height: 16,
                   ),
-                  FractionallySizedBox(
-                    widthFactor: 1,
-                    child: ElevatedButton(
-                        onPressed: () async {
-                          FilePickerResult? result =
-                              await FilePicker.platform.pickFiles();
+                  // FractionallySizedBox(
+                  //   widthFactor: 1,
+                  //   child: ElevatedButton(
+                  //       onPressed: () async {
+                  //         FilePickerResult? result =
+                  //             await FilePicker.platform.pickFiles();
 
-                          if (result != null) {
-                            PlatformFile file = result.files.first;
+                  //         if (result != null) {
+                  //           PlatformFile file = result.files.first;
 
-                            setState(() {
-                              this.file = file;
-                            });
-                          }
-                        },
-                        style: ButtonStyle(
-                          shape: WidgetStatePropertyAll(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              side: const BorderSide(
-                                color: Colors
-                                    .white, // Change to your desired border color
-                                width: 1, // Change to your desired border width
-                              ),
-                            ),
-                          ),
-                          backgroundColor: const WidgetStatePropertyAll(
-                              CustomColorScheme.mySurface),
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.all(16 * 1.15),
-                          child: Row(
-                            children: [
-                              Icon(
-                                FluentIcons.document_16_regular,
-                                color: Colors.white,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                "Attach Document",
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        )),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  FractionallySizedBox(
-                    widthFactor: 1,
-                    child: file != null
-                        ? Text(file!.name)
-                        : const Text("No file selected."),
-                  ),
+                  //           setState(() {
+                  //             this.file = file;
+                  //           });
+                  //         }
+                  //       },
+                  //       style: ButtonStyle(
+                  //         shape: WidgetStatePropertyAll(
+                  //           RoundedRectangleBorder(
+                  //             borderRadius: BorderRadius.circular(5),
+                  //             side: const BorderSide(
+                  //               color: Colors
+                  //                   .white, // Change to your desired border color
+                  //               width: 1, // Change to your desired border width
+                  //             ),
+                  //           ),
+                  //         ),
+                  //         backgroundColor: const WidgetStatePropertyAll(
+                  //             CustomColorScheme.mySurface),
+                  //       ),
+                  //       child: const Padding(
+                  //         padding: EdgeInsets.all(16 * 1.15),
+                  //         child: Row(
+                  //           children: [
+                  //             Icon(
+                  //               FluentIcons.document_16_regular,
+                  //               color: Colors.white,
+                  //             ),
+                  //             SizedBox(width: 5),
+                  //             Text(
+                  //               "Attach Document",
+                  //               style: TextStyle(
+                  //                   fontSize: 16, color: Colors.white),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       )),
+                  // ),
+                  // const SizedBox(
+                  //   height: 16,
+                  // ),
+                  // FractionallySizedBox(
+                  //   widthFactor: 1,
+                  //   child: file != null
+                  //       ? Text(file!.name)
+                  //       : const Text("No file selected."),
+                  // ),
                   const SizedBox(
                     height: 16 * 2,
                   ),

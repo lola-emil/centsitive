@@ -124,8 +124,14 @@ export async function searchTransaction(req: Request, res: Response) {
     const apiResponse = new ApiResponse();
     const userId = req.query.userId;
     const query = req.query.q;
+    const date = req.query.date as string;
 
-    const result = await recordRepo.searchByDescriptionOrCategory(parseInt(userId + ""), query + "");
+    console.log({
+        query,
+        date
+    })
+
+    const result = await recordRepo.searchByDescriptionOrCategory(parseInt(userId + ""), query + "", date);
 
     apiResponse.status = 200;
     apiResponse.data = result;

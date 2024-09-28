@@ -10,6 +10,9 @@ class TransactionListItem extends StatelessWidget {
   final int itemId;
   final bool deleteButtonVisible;
   final String createdAt;
+  final String status;
+
+   final VoidCallback onTap;
 
   const TransactionListItem(
       {super.key,
@@ -18,7 +21,8 @@ class TransactionListItem extends StatelessWidget {
       required this.amount,
       required this.deleteButtonVisible,
       required this.itemId,
-      required this.createdAt});
+      required this.createdAt,
+      required this.status, required this.onTap});
 
   String formatDate(String date) {
     DateTime parsedDate = DateTime.parse(date);
@@ -31,12 +35,7 @@ class TransactionListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (builder) => RecordDetailPage(itemId: itemId)));
-      },
+      onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(8.0),
@@ -56,15 +55,27 @@ class TransactionListItem extends StatelessWidget {
               )
             ],
           ),
-          Expanded(
-            flex: 1,
-            child: Text(
-              amount,
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                color: CustomColorScheme.myError,
+          Column(
+            children: [
+              Text(
+                amount,
+                textAlign: TextAlign.right,
+                style: const TextStyle(
+                  color: CustomColorScheme.myError,
+                ),
               ),
-            ),
+              Text(
+                status,
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  color: status == "approved"
+                      ? Colors.green
+                      : status == "pending"
+                          ? Colors.white
+                          : CustomColorScheme.myError,
+                ),
+              )
+            ],
           ),
         ]),
       ),

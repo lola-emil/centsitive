@@ -13,43 +13,6 @@
         </p>
 
             <div class="flex gap-2">
-                <div class="dropdown">
-                    <div tabindex="0" class="btn bg-base-300">
-                        <svg width="24" height="24" fill="none" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M13.5 16a.75.75 0 0 1 0 1.5h-3a.75.75 0 0 1 0-1.5h3Zm3-5a.75.75 0 0 1 0 1.5h-9a.75.75 0 0 1 0-1.5h9Zm3-5a.75.75 0 0 1 0 1.5h-15a.75.75 0 0 1 0-1.5h15Z"
-                                fill="#ffffff" />
-                        </svg>
-
-                        <span>Filter</span>
-                    </div>
-                    <ul
-                        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                        <li>By Name</li>
-                        <li>By Category</li>
-                        <li>By Date</li>
-                    </ul>
-                </div>
-
-                <div class="dropdown">
-                    <div tabindex="0" class="btn bg-base-300">
-                        <svg width="24" height="24" fill="none" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="m17.25 4-.1.007a.75.75 0 0 0-.65.743v12.692l-3.22-3.218-.084-.072a.75.75 0 0 0-.976 1.134l4.504 4.5.084.072a.75.75 0 0 0 .976-.073l4.497-4.5.072-.084a.75.75 0 0 0-.073-.977l-.084-.072a.75.75 0 0 0-.977.073L18 17.446V4.75l-.006-.102A.75.75 0 0 0 17.251 4Zm-11.036.22L1.72 8.715l-.073.084a.75.75 0 0 0 .073.976l.084.073a.75.75 0 0 0 .976-.073l3.217-3.218v12.698l.008.102a.75.75 0 0 0 .743.648l.101-.007a.75.75 0 0 0 .649-.743L7.497 6.559l3.223 3.217.084.072a.75.75 0 0 0 .975-1.134L7.275 4.22l-.085-.072a.75.75 0 0 0-.976.073Z"
-                                fill="#ffffff" />
-                        </svg>
-
-                        <span>Sort</span>
-                    </div>
-                    <ul
-                        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                        <li>By Name</li>
-                        <li>By Category</li>
-                        <li>By Date</li>
-                    </ul>
-                </div>
             </div>
         </div>
 
@@ -58,7 +21,8 @@
         <table class="w-full table table-zebra">
             <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>Added by</th>
+                    <th>Description</th>
                     <th>Category</th>
                     <th>Date</th>
                     <th>Amount</th>
@@ -69,27 +33,33 @@
 
             <tbody>
                 @for(item of data; track $index) {
+            
                     <tr>
-                        <td>{{ item.name }}</td>
+                        <td>{{ item.firstname }} {{ item.lastname }}</td>
+                        <td>{{ item.note }}</td>
                         <td>{{ item.category }}</td>
-                        <td>{{ item.date }}</td>
-                        <td>{{ item.amount }}</td>
+                        <td>{{ item.created_at | date: 'MM/dd/yyyy, h:mm a' }}</td>
+                        <td>{{ item.amount | currency:'PHP':'symbol' }}</td>
                         <td>
                             @if(item.status == "approved") {
-                                <div class="badge badge-success badge-outline">{{ item.status }}</div>
+                            <div class="badge badge-success badge-outline">{{ item.status }}</div>
                             }
-
+            
+                            @else if (item.status == "rejected") {
+                                <div class="badge badge-error badge-outline">{{ item.status }}</div>
+                            }
+            
                             @else {
-                                <div class="badge badge-outline">{{ item.status }}</div>
+                            <div class="badge badge-outline">{{ item.status }}</div>
                             }
-
+            
                         </td>
-
+            
                         <td>
-                            <button class="link link-primary" (click)="openDialog()">View Details</button>
+                            <a [routerLink]="['/expense-detail', item.record_id]" class="link link-primary">View detail</a>
                         </td>
                     </tr>
-                } @empty {
+                    } @empty {
                     <p>Wala pay activities</p>                    
                 }
             </tbody>

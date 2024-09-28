@@ -11,14 +11,19 @@ import 'package:mime/mime.dart';
 const FlutterSecureStorage secureStorage = FlutterSecureStorage();
 Dio dio = Dio();
 
-Future<List<ExpenseModel>> getTransactions() async {
+Future<List<ExpenseModel>> getTransactions(DateTime? date) async {
   String? token = await secureStorage.read(key: "TOKEN");
   String? userId = await secureStorage.read(key: "USER_ID");
   List<ExpenseModel> list = List.of([]);
-  dio.options.headers["authorization"] = "Bearer $token";
 
-  Response response = await dio
-      .get("http://localhost:5000/expense/transactions?userId=$userId");
+  String url = "http://localhost:5000/expense/transactions?userId=$userId";
+
+  if (date != null) {
+    url += "&date=$date";
+  }
+
+  dio.options.headers["authorization"] = "Bearer $token";
+  Response response = await dio.get(url);
 
   dynamic data = response.data["data"];
   for (int i = 0; i < data.length; i++) {
@@ -29,8 +34,7 @@ Future<List<ExpenseModel>> getTransactions() async {
         data[i]["amount"].toDouble(),
         int.parse(data[i]["user_id"]),
         data[i]["created_at"],
-        data[i]["status"]
-        ));
+        data[i]["status"]));
   }
 
   return list;
@@ -87,16 +91,14 @@ Future<List<ExpenseModel>> getRecentTransactions(DateTime? date) async {
         data[i]["amount"].toDouble(),
         int.parse(data[i]["user_id"]),
         data[i]["created_at"],
-        
-        data[i]["status"]
-        ));
+        data[i]["status"]));
   }
 
   return list;
 }
 
 Future<void> addTransaction(
-    String category, double amount, String note, PlatformFile file) async {
+    String category, double amount, String note) async {
   String? token = await secureStorage.read(key: "TOKEN");
   String? userId = await secureStorage.read(key: "USER_ID");
 
@@ -111,36 +113,44 @@ Future<void> addTransaction(
     "user_id": userId,
   });
 
-  if (kIsWeb) {
-    dynamic image = file.bytes;
-    formData.files.add(MapEntry(
-      "image",
-      MultipartFile.fromBytes(image,
-          filename: file.name,
-          contentType: DioMediaType.parse(lookupMimeType(file.name) ?? "application/octet-stream")),
-    ));
-  } else {
-    File image = File(file.path!);
-    formData.files.add(MapEntry(
-      "image",
-      await MultipartFile.fromFile(image.path),
-    ));
-  }
+  // if (kIsWeb) {
+  //   dynamic image = file.bytes;
+  //   formData.files.add(MapEntry(
+  //     "image",
+  //     MultipartFile.fromBytes(image,
+  //         filename: file.name,
+  //         contentType: DioMediaType.parse(
+  //             lookupMimeType(file.name) ?? "application/octet-stream")),
+  //   ));
+  // } else {
+  //   File image = File(file.path!);
+  //   formData.files.add(MapEntry(
+  //     "image",
+  //     await MultipartFile.fromFile(image.path),
+  //   ));
+  // }
 
   await dio.post("http://localhost:5000/expense/transactions",
       data: formData,
       options: Options(headers: {"Content-Type": "multipart/form-data"}));
 }
 
-Future<List<ExpenseModel>> searchTransaction(String query) async {
+Future<List<ExpenseModel>> searchTransaction(
+    String query, DateTime? date) async {
   String? token = await secureStorage.read(key: "TOKEN");
   String? userId = await secureStorage.read(key: "USER_ID");
 
   List<ExpenseModel> list = List.of([]);
 
   dio.options.headers["authorization"] = "Bearer $token";
-  Response response = await dio
-      .get("http://localhost:5000/expense/search?q=$query&userId=$userId");
+
+  String url = "http://localhost:5000/expense/search?q=$query&userId=$userId";
+
+  if (date != null) {
+    url += "&date=$date";
+  }
+
+  Response response = await dio.get(url);
   dynamic data = response.data["data"];
 
   for (int i = 0; i < data.length; i++) {
@@ -151,9 +161,7 @@ Future<List<ExpenseModel>> searchTransaction(String query) async {
         data[i]["amount"].toDouble(),
         int.parse(data[i]["user_id"]),
         data[i]["created_at"],
-        data[i]["status"]
-        
-        ));
+        data[i]["status"]));
   }
 
   return list;
@@ -177,21 +185,19 @@ Future<String> getFormattedMonthAndYear(DateTime? date) async {
 }
 
 Future<ExpenseModel> getTransactionById(int id) async {
-    String? token = await secureStorage.read(key: "TOKEN");
+  String? token = await secureStorage.read(key: "TOKEN");
   // String? userId = await secureStorage.read(key: "USER_ID");
 
-
-    dio.options.headers["authorization"] = "Bearer $token";
-  Response response = await dio
-      .get("http://localhost:5000/expense/transactions/$id");
+  dio.options.headers["authorization"] = "Bearer $token";
+  Response response =
+      await dio.get("http://localhost:5000/expense/transactions/$id");
 
   dynamic data = response.data["data"];
-  
+
   print(data);
 
-  return ExpenseModel(data["record_id"], data["note"], data["category"], data["amount"], data["user_id"], data["created_at"],
-        data["status"]
-  );
+  return ExpenseModel(data["record_id"], data["note"], data["category"],
+      data["amount"], data["user_id"], data["created_at"], data["status"]);
 }
 
 Future<String> deleteTransaction(int itemId) async {

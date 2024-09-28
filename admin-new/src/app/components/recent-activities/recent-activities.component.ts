@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ExpenseDetailModalComponent } from "../expense-detail-modal/expense-detail-modal.component";
+import { ExpenseService } from '../../repository/expense/expense.service';
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 
 type Expense = {
@@ -7,53 +10,32 @@ type Expense = {
   date: string,
   category: string,
   amount: number,
-  status: string
-}
+  status: string;
+};
 @Component({
   selector: 'app-recent-activities',
   standalone: true,
-  imports: [ExpenseDetailModalComponent],
+  imports: [ExpenseDetailModalComponent, DatePipe, CurrencyPipe, RouterLink],
   templateUrl: './recent-activities.component.html',
-  styleUrl: './recent-activities.component.css'
+  styleUrl: './recent-activities.component.css',
+  providers: [DatePipe, CurrencyPipe]
 })
-export class RecentActivitiesComponent {
-  data = [
-    {
-      name: "Office Supplies",
-      date: "2024-09-21",
-      category: "Supplies",
-      amount: 150.75,
-      status: "approved"
-    },
-    {
-      name: "Travel Expenses",
-      date: "2024-09-18",
-      category: "Travel",
-      amount: 320.50,
-      status: "pending"
-    },
-    {
-      name: "Client Lunch",
-      date: "2024-09-19",
-      category: "Meals",
-      amount: 85.30,
-      status: "approved"
-    },
-    {
-      name: "Software Subscription",
-      date: "2024-09-20",
-      category: "Software",
-      amount: 45.99,
-      status: "pending"
-    },
-    {
-      name: "Internet Bill",
-      date: "2024-09-15",
-      category: "Utilities",
-      amount: 60.00,
-      status: "approved"
-    }
-  ];
+export class RecentActivitiesComponent implements OnInit {
+
+  constructor(private expenseRepo: ExpenseService) {
+  }
+
+  
+  ngOnInit(): void {
+    this.expenseRepo.getRecent()
+    .subscribe({
+      next: val => {
+        this.data = val;
+      }
+    })
+  }
+
+  data: any = [];
 
   expenseDetailModalVisible = false;
 

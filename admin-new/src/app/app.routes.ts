@@ -7,6 +7,7 @@ import { authGuardGuard } from './guards/auth/auth-guard.guard';
 import { PageNotFoundComponent } from './views/page-not-found/page-not-found.component';
 import { AddUserPageComponent } from './views/add-user-page/add-user-page.component';
 import { EditUserPageComponent } from './views/edit-user-page/edit-user-page.component';
+import { ExpenseDetaliPageComponent } from './views/expense-detali-page/expense-detali-page.component';
 
 
 const protectedRoutes: Routes = [
@@ -38,6 +39,11 @@ const protectedRoutes: Routes = [
     {
         path: "edit-user/:id",
         component: EditUserPageComponent,
+    },
+
+    {
+        path: "expense-detail/:id",
+        component: ExpenseDetaliPageComponent
     }
 ];
 

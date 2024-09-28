@@ -4,10 +4,12 @@ import 'package:expense_tracker/models/expense_model.dart';
 import 'package:expense_tracker/components/drawer_menu.dart';
 import 'package:expense_tracker/components/transaction_list_item.dart';
 import 'package:expense_tracker/shared/color/custom_color_scheme.dart';
+import 'package:expense_tracker/views/record_detail_page.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/repository/expense_repository.dart'
     as expense_repository;
+import 'package:month_year_picker/month_year_picker.dart';
 
 class RecordsPage extends StatefulWidget {
   const RecordsPage({super.key});
@@ -25,46 +27,55 @@ class _RecordsPageState extends State<RecordsPage> {
   bool isError = false;
   List<ExpenseModel> expenseList = List.of([]);
 
+  String currentMonthAndYear = "";
+
+  DateTime? selectedMonthAndYear;
+
   Future<void> fetchData() async {
+    setState(() {
+      isLoading = true;
+      isError = false;
+    });
+
+    final monthAndYear =
+        await expense_repository.getFormattedMonthAndYear(null);
+
+    expense_repository.getTransactions(null).then((list) {
       setState(() {
-        isLoading = true;
-        isError = false;
+        expenseList = list;
+        isLoading = false;
+        currentMonthAndYear = monthAndYear;
       });
-    expense_repository.getTransactions().then((list) {
-        setState(() {
-          expenseList = list;
-          isLoading = false;
-        });
     }).catchError((error) {
       print(error);
 
-        setState(() {
-          isError = true;
-          isLoading = false;
-        });
+      setState(() {
+        isError = true;
+        isLoading = false;
+      });
     });
   }
 
   Future<void> fetchSearchedData(String query) async {
-      setState(() {
-        isLoading = true;
-      });
+    setState(() {
+      isLoading = true;
+    });
     try {
-      List<ExpenseModel> list =
-          await expense_repository.searchTransaction(query);
+      List<ExpenseModel> list = await expense_repository.searchTransaction(
+          query, selectedMonthAndYear);
 
-        setState(() {
-          expenseList = list;
-        });
+      setState(() {
+        expenseList = list;
+      });
     } catch (error) {
       print(error);
-        setState(() {
-          isError = true;
-        });
+      setState(() {
+        isError = true;
+      });
     } finally {
-        setState(() {
-          isLoading = false;
-        });
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -75,15 +86,15 @@ class _RecordsPageState extends State<RecordsPage> {
       fetchData();
       _snackbar.showSnackBar(SnackBar(content: Text(message)));
     } catch (error) {
-        setState(() {
-          isError = true;
-        });
+      setState(() {
+        isError = true;
+      });
     }
   }
 
   @override
   void initState() {
-      fetchData();
+    fetchData();
     super.initState();
   }
 
@@ -96,6 +107,40 @@ class _RecordsPageState extends State<RecordsPage> {
   void setState(VoidCallback fn) {
     if (mounted) {
       super.setState(fn);
+    }
+  }
+
+  Future<void> showPicker() async {
+    var result = await showMonthYearPicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2019),
+      lastDate: DateTime.now(),
+    );
+
+    selectedMonthAndYear = result;
+
+    if (result != null) {
+      // getPreviousData(result);
+      try {
+        final results =
+            await expense_repository.getTransactions(selectedMonthAndYear);
+        final monthAndYear =
+            await expense_repository.getFormattedMonthAndYear(result);
+
+        if (mounted) {
+          expenseList = results;
+          currentMonthAndYear = monthAndYear;
+        }
+      } catch (error) {
+        setState(() {
+          isError = true;
+        });
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -135,6 +180,27 @@ class _RecordsPageState extends State<RecordsPage> {
       body: Center(
         child: Column(
           children: [
+            const SizedBox(
+              height: 10,
+            ),
+            FractionallySizedBox(
+                widthFactor: .9,
+                child: GestureDetector(
+                  onTap: showPicker,
+                  child: Row(
+                    children: [
+                      Text(
+                        currentMonthAndYear,
+                        style: const TextStyle(
+                            fontSize: 16 * 1.25, fontWeight: FontWeight.w500),
+                      ),
+                      const Icon(
+                        FluentIcons.chevron_right_12_regular,
+                        color: Colors.white,
+                      )
+                    ],
+                  ),
+                )),
             const SizedBox(height: 16),
             FractionallySizedBox(
               widthFactor: .9,
@@ -168,7 +234,7 @@ class _RecordsPageState extends State<RecordsPage> {
                       ),
                     );
                   }
-      
+
                   if (isError) {
                     return Center(
                       child: Column(
@@ -181,7 +247,7 @@ class _RecordsPageState extends State<RecordsPage> {
                       ),
                     );
                   }
-      
+
                   return RefreshIndicator(
                     onRefresh: () async {
                       fetchData();
@@ -190,12 +256,24 @@ class _RecordsPageState extends State<RecordsPage> {
                       children: List.generate(
                         expenseList.length,
                         (index) => TransactionListItem(
+                            onTap: () async {
+                              final result = await Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return RecordDetailPage(
+                                    itemId: expenseList[index].id);
+                              }));
+
+                              if (result != null) {
+                                fetchData();
+                              }
+                            },
                             itemId: expenseList[index].id,
                             deleteButtonVisible: true,
                             category: expenseList[index].category,
                             description: expenseList[index].note,
                             createdAt: expenseList[index].createdAt,
-                            amount: "Php ${expenseList[index].amount}"),
+                            amount: "Php ${expenseList[index].amount}",
+                            status: expenseList[index].status),
                       ),
                     ),
                   );

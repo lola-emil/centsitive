@@ -22,10 +22,21 @@ const adminLoginSchema = Joi.object({
 const registerSchema = Joi.object({
     firstname: Joi.string().required(),
     lastname: Joi.string().required(),
-    username: Joi.string().required(),
+    // username: Joi.string().required(),
     email: Joi.string().email().required(),
     // position: Joi.string().required(),
-    password: Joi.string().alphanum().min(8).required()
+    password: Joi.string().alphanum().min(8).required(),
+});
+
+const userUpdateSchema = Joi.object({
+    firstname: Joi.string(),
+    lastname: Joi.string(),
+    // username: Joi.string().required(),
+    email: Joi.string().email(),
+    // position: Joi.string().required(),
+    password: Joi.string().alphanum().min(8),
+    status: Joi.allow()
+
 });
 
 const recordSchema = Joi.object({
@@ -58,8 +69,20 @@ export async function validateRegister(user: User): Promise<string | null> {
 
     if (error) return error.message;
 
-    const matchedUser = await userRepo.findByEmail(user.username);
+    const matchedUser = await userRepo.findByEmail(user.email);
     if (matchedUser) return "Email already taken";
+
+    return null;
+}
+
+
+export async function validateUserUpdate(user: User): Promise<string | null> {
+    const { error } = userUpdateSchema.validate(user);
+
+    if (error) return error.message;
+
+    const matchedUser = await userRepo.findByEmail(user.email);
+    if (matchedUser && matchedUser.email != user.email) return "Email already taken";
 
     return null;
 }

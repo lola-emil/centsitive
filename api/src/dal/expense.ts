@@ -128,16 +128,16 @@ export async function getTotalExpenseById(userId: number, date?: string) {
     }
 }
 
-export async function searchByDescriptionOrCategory(userId: number, query: string) {
-    let now = new Date();
+export async function searchByDescriptionOrCategory(userId: number, query: string, date?: string) {
+    if (!date || date == "") date = new Date().toISOString();
 
     try {
         const result = await db<Expense>(TBL_NAME)
             .select()
             .where("user_id", userId)
             .andWhere('delete_time', null)
-            .andWhereRaw("MONTH(created_at) = MONTH(?)", [now])
-            .andWhereRaw("YEAR(created_at) = YEAR(?)", [now])
+            .andWhereRaw("MONTH(created_at) = MONTH(?)", [date])
+            .andWhereRaw("YEAR(created_at) = YEAR(?)", [date])
             .andWhere(function () {
                 this.whereILike("note", `%${query}%`)
                     .orWhereILike("category", `%${query}%`);

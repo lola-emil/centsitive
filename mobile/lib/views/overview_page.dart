@@ -9,6 +9,7 @@ import 'package:expense_tracker/components/drawer_menu.dart';
 import 'package:expense_tracker/components/transaction_list_item.dart';
 import 'package:expense_tracker/shared/color/chart_colors.dart';
 import 'package:expense_tracker/shared/color/custom_color_scheme.dart';
+import 'package:expense_tracker/views/record_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:expense_tracker/repository/expense_repository.dart'
@@ -201,7 +202,6 @@ class _OverviewPageState extends State<OverviewPage> {
               fetchData();
             },
             child: SingleChildScrollView(
-              
               child: SizedBox(
                 height: screenHeight,
                 child: const Center(
@@ -228,7 +228,6 @@ class _OverviewPageState extends State<OverviewPage> {
 
         if (noRecords) {
           return RefreshIndicator(
-
             onRefresh: () async {
               print("Refresh triggered");
               fetchData();
@@ -236,39 +235,40 @@ class _OverviewPageState extends State<OverviewPage> {
             child: ListView(
               physics: const AlwaysScrollableScrollPhysics(),
               children: [
-              const SizedBox(
-                height: 10,
-              ),
-              FractionallySizedBox(
-                  widthFactor: .9,
-                  child: GestureDetector(
-                    onTap: showPicker,
-                    child: Row(
-                      children: [
-                        Text(
-                          currentMonthAndYear,
-                          style: const TextStyle(
-                              fontSize: 16 * 1.25, fontWeight: FontWeight.w500),
-                        ),
-                        const Icon(
-                          FluentIcons.chevron_right_12_regular,
-                          color: Colors.white,
-                        )
-                      ],
-                    ),
-                  )),
-              SizedBox(
-                height: screenHeight,
-                width: screenWidth,
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text("No transaction has been made for this month")
-                  ],
+                const SizedBox(
+                  height: 10,
                 ),
-              ),
-            ],
+                FractionallySizedBox(
+                    widthFactor: .9,
+                    child: GestureDetector(
+                      onTap: showPicker,
+                      child: Row(
+                        children: [
+                          Text(
+                            currentMonthAndYear,
+                            style: const TextStyle(
+                                fontSize: 16 * 1.25,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          const Icon(
+                            FluentIcons.chevron_right_12_regular,
+                            color: Colors.white,
+                          )
+                        ],
+                      ),
+                    )),
+                SizedBox(
+                  height: screenHeight,
+                  width: screenWidth,
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text("No transaction has been made for this month")
+                    ],
+                  ),
+                ),
+              ],
             ),
           );
         }
@@ -345,20 +345,32 @@ class _OverviewPageState extends State<OverviewPage> {
                         )),
                     Column(
                       children: List.generate(
-                          recentTransactions.length,
-                          (index) => TransactionListItem(
-                              itemId: recentTransactions[index].id,
-                              deleteButtonVisible: false,
-                              category: recentTransactions[index].category,
-                              description: recentTransactions[index].note,
-                              createdAt: recentTransactions[index].createdAt,
-                              amount:
-                                  "Php ${recentTransactions[index].amount}")),
+                        recentTransactions.length,
+                        (index) => TransactionListItem(
+                          onTap: () async {
+                            final result = await Navigator.push(context,
+                                MaterialPageRoute(builder: (builder) {
+                              return RecordDetailPage(
+                                  itemId: recentTransactions[index].id);
+                            }));
+                            if (result != null) {
+                              fetchData();
+                            }
+                          },
+                          itemId: recentTransactions[index].id,
+                          deleteButtonVisible: false,
+                          category: recentTransactions[index].category,
+                          description: recentTransactions[index].note,
+                          createdAt: recentTransactions[index].createdAt,
+                          amount: "Php ${recentTransactions[index].amount}",
+                          status: recentTransactions[index].status,
+                        ),
+                      ),
                     )
                   ],
                 ),
               ),
-          
+
               // Scroll padding
               const SizedBox(
                 height: 16 * 4,
