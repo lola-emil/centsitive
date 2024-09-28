@@ -20,8 +20,25 @@ export class UserService {
     return this.http.post(`${environment.apiUrl}/auth/login-admin`, { username, password });
   }
 
-  get() {
-    return this.http.get(`${environment.apiUrl}/user-admin`, {
+  get(query?: any) {
+    const urlQueryParams = new URLSearchParams(query);
+    return this.http.get(`${environment.apiUrl}/user-admin?${urlQueryParams.toString()}`, {
+      headers: {
+        "Authorization": `Bearer ${this.info.token}`
+      }
+    });
+  }
+
+  insert(body: any) {
+    return this.http.post(`${environment.apiUrl}/user-admin`, body,{
+      headers: {
+        "Authorization": `Bearer ${this.info.token}`
+      }
+    });
+  }
+
+  edit(id: string, body: any) {
+    return this.http.put(`${environment.apiUrl}/user-admin/${id}`, body, {
       headers: {
         "Authorization": `Bearer ${this.info.token}`
       }

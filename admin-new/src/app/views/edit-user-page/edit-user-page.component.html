@@ -1,0 +1,88 @@
+<app-navbar/>
+
+<div class="w-full flex flex-col justify-center items-center h-[calc(100vh-4rem)]">
+    <h3 class="text-2xl">Edit User</h3>
+    <br>
+    <br>
+
+    <form action="" class="w-1/3 min-w-80" [formGroup]="editFormGroup" (submit)="editUser()">
+        
+        @if(error) {
+            <div class="alert alert-error">
+                {{ error }}
+            </div>
+        }
+        <div class="flex gap-5">
+            <label class="form-control w-full">
+                <div class="label">
+                    <span class="label-text">First Name</span>
+                </div>
+                <input type="text" formControlName="firstname" class="input input-bordered w-full" />
+                <div class="label">
+                    <!-- <span class="label-text-alt">Email is required</span> -->
+                </div>
+            </label>
+    
+    
+            <label class="form-control w-full">
+                <div class="label">
+                    <span class="label-text">Last Name</span>
+                </div>
+                <input type="text" formControlName="lastname" class="input input-bordered w-full" />
+                <div class="label">
+                    <!-- <span class="label-text-alt">Email is required</span> -->
+                </div>
+            </label>
+        </div>
+        
+
+        <label class="form-control w-full">
+            <div class="label">
+                <span class="label-text">Email</span>
+            </div>
+            <input type="text" formControlName="email" class="input input-bordered w-full" />
+            <div class="label">
+                <!-- <span class="label-text-alt">Email is required</span> -->
+            </div>
+        </label>
+
+        <label class="form-control w-full">
+            <div class="label">
+                <span class="label-text">Password</span>
+            </div>
+            <input type="password" formControlName="password" class="input input-bordered w-full" />
+            <div class="label">
+                <!-- <span class="label-text-alt">Email is required</span> -->
+            </div>
+        </label>
+
+        <label class="form-control w-full">
+            <div class="label">
+                <span class="label-text">Confirm Password</span>
+            </div>
+            <input type="text" formControlName="confirm_password" class="input input-bordered w-full" />
+            <div class="label">
+                <!-- <span class="label-text-alt">Email is required</span> -->
+            </div>
+        </label>
+
+        <div class="flex gap-5 w-full">
+        <button type="submit" class="btn btn-primary flex-1">
+            Submit
+        </button>
+
+
+
+        @if (user.status == "active") {
+            <div role="button" (click)="deactivateAccount()" class="btn btn-error flex-1">
+                Deactivate account
+            </div>
+        } @else { 
+            <div role="button" (click)="activateAccount()" class="btn btn-success flex-1">
+                Activate account
+            </div>
+        }
+
+        </div>
+    </form>
+</div>
