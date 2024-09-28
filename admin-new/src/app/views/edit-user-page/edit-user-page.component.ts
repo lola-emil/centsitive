@@ -61,6 +61,11 @@ export class EditUserPageComponent implements OnInit {
 
   editUser() {
 
+    if (this.editFormGroup.value.password != this.editFormGroup.value.confirm_password) {
+      this.error = "Password doesn't match";
+      return;
+    }
+
     this.userRepo.edit(this.userId, {
       firstname: this.editFormGroup.value.firstname,
       lastname: this.editFormGroup.value.lastname,
