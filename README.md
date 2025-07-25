@@ -25,6 +25,6 @@ Track your daily expenses and visualize where your money's going
 ```bash
 git clone https://github.com/lola-emil/centsitive.git
 cd centsitive
-npm install
-npm start
+npm run build
+npm run start
 ```
